@@ -206,7 +206,8 @@ footer nav{gap:0 !important}
 .beat2{stroke-dasharray:0.12 1;stroke-dashoffset:0.12;opacity:0;animation:beat2 12s linear 1.2s infinite;filter:drop-shadow(0 0 6px rgba(200,241,53,.9))}
 @keyframes beat{0%,62%{stroke-dashoffset:0.07;opacity:0}64%{opacity:1}78%{stroke-dashoffset:-1;opacity:1}79%,100%{stroke-dashoffset:-1;opacity:0}}
 @keyframes beat2{0%,78%{stroke-dashoffset:0.12;opacity:0}79%{opacity:1}86%{stroke-dashoffset:-1;opacity:1}87%,100%{stroke-dashoffset:-1;opacity:0}}
-@media (max-width:1100px){.pulse-hero .pulse-arrow{left:auto !important;right:28px}.pulse-hero .pulse-wave{width:calc((100% - 196px) / 0.55)}}
+.pulse-hero.measured .pulse-arrow{left:var(--ax) !important;transform:scale(var(--as));transform-origin:2px 148px}
+.pulse-hero.measured .pulse-wave{width:calc((var(--ax) + 2px) / 0.55)}
 @media (prefers-reduced-motion: reduce){.pulse-rise,.beat2,.pulse-hero .pulse-path,.pulse-hero .pulse-head{animation:none;stroke-dashoffset:0;opacity:1}.beat2{opacity:0}}
 </style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://localpulsehub.com/#organization", "name": "LocalPulseHub", "url": "https://localpulsehub.com", "logo": "https://localpulsehub.com/icon.png", "email": "support@localpulsehub.com", "sameAs": ["https://www.instagram.com/localpulsehub/", "https://www.linkedin.com/company/localpulsehub/"]}, {"@type": "WebSite", "name": "LocalPulseHub", "url": "https://localpulsehub.com", "publisher": {"@id": "https://localpulsehub.com/#organization"}}, {"@type": "SoftwareApplication", "name": "LocalPulseHub", "url": "https://localpulsehub.com", "applicationCategory": "BusinessApplication", "operatingSystem": "Web", "featureList": ["QR code review collection", "Email and WhatsApp review requests", "AI review replies in English, German, French and Spanish", "1-star alerts within the hour"], "offers": {"@type": "Offer", "price": "39.99", "priceCurrency": "USD", "url": "https://localpulsehub.com/pricing"}}]}</script>
@@ -709,6 +710,26 @@ footer nav{gap:0 !important}
     var io=new IntersectionObserver(function(es){es.forEach(function(e){e.isIntersecting?blocked.add(e.target):blocked.delete(e.target)});upd();});
     stops.forEach(function(s){io.observe(s)});
   }
+})();
+</script>
+
+<script>
+(function(){
+  var p=document.querySelector('.pulse-hero'),hero=document.getElementById('top');
+  if(!p||!hero)return;
+  var phone=hero.querySelector('[aria-label^="A 1-star review arrives"]');
+  var col=hero.querySelector('h1').parentNode;
+  function place(){
+    var hr=hero.getBoundingClientRect(),ph=phone.getBoundingClientRect(),textRight=0,textBottom=0;
+    var rg=document.createRange(),tw=document.createTreeWalker(col,NodeFilter.SHOW_TEXT),n;while((n=tw.nextNode())){if(!n.textContent.trim())continue;rg.selectNodeContents(n);[].forEach.call(rg.getClientRects(),function(r){if(r.width>0){textRight=Math.max(textRight,r.right);textBottom=Math.max(textBottom,r.bottom);}});}[].forEach.call(col.querySelectorAll("a,button"),function(b){var r=b.getBoundingClientRect();textRight=Math.max(textRight,r.right);});
+    textRight-=hr.left;var phoneLeft=ph.left-hr.left,W=hr.width,ax,s=1;
+    var stacked=ph.top>=textBottom-4;
+    if(stacked){ax=W-28-170;}
+    else{var gap=phoneLeft-textRight;s=Math.max(0.45,Math.min(1,(gap-24)/170));ax=textRight+(gap-170*s)/2;}
+    p.style.setProperty('--ax',Math.round(ax)+'px');p.style.setProperty('--as',s.toFixed(3));p.classList.add('measured');
+  }
+  place();addEventListener('resize',place);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(place);
 })();
 </script>
 </body>
