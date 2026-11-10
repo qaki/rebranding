@@ -96,7 +96,15 @@ a:focus-visible,button:focus-visible{outline:3px solid #C8F135;outline-offset:3p
 @keyframes hsQr{0%,6%{opacity:0;transform:translateY(12px)}8.5%,31.5%{opacity:1;transform:none}33.3%,100%{opacity:0}}
 .hs-d0{animation-delay:.8s !important}.hs-d1{animation-delay:5.8s !important}.hs-d2{animation-delay:10.8s !important}
 .hs-g.hs-d0 .gs path{animation-delay:.8s !important}.hs-g.hs-d1 .gs path{animation-delay:5.8s !important}.hs-g.hs-d2 .gs path{animation-delay:10.8s !important}
+
+.hs-pause{position:relative;flex:none;width:34px;height:34px;border:0;border-radius:999px;background:#13284F;color:#DCE4F2;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background-color .15s ease}
+.hs-pause:hover{background:#1E3566}
+.hs-pause::after{content:"";position:absolute;inset:-5px}
+.hs-pause .i-play{display:none}
+.hs-paused .hs-pause .i-play{display:block}.hs-paused .hs-pause .i-pause{display:none}
+.hs-paused .hs-wrap *,.hs-paused .pulse-hero .beat,.hs-paused .pulse-hero .beat2{animation-play-state:paused !important}
 @media (prefers-reduced-motion: reduce){
+ .hs-pause{display:none}
  .hs-scene,.hs-msg,.hs-g,.hs-link,.hs-pill,.gs path,.hs-scanline{animation:none !important}
  .hs-wrap[data-solo] .hs-scene,.hs-wrap[data-solo] .hs-pill{opacity:0;background:transparent;color:#A9B8D2}
  .hs-wrap[data-solo="0"] .hs-scene.hs-d0,.hs-wrap[data-solo="1"] .hs-scene.hs-d1,.hs-wrap[data-solo="2"] .hs-scene.hs-d2{opacity:1}
@@ -227,6 +235,7 @@ footer nav a{display:inline-block;padding:10px 0}
 footer nav{gap:0 !important}
 .sticky-cta{display:none}
 @media (max-width:820px){
+ html{scroll-padding-bottom:96px}
  .sticky-cta{display:block;position:fixed;left:12px;right:12px;bottom:12px;z-index:30;transform:translateY(140%);transition:transform .35s cubic-bezier(0.16,1,0.3,1)}
  .sticky-cta.show{transform:none}
  .sticky-cta a{display:block;text-align:center;background:#C8F135;color:#0B1B3A;text-decoration:none;font-size:16px;font-weight:800;padding:16px;border-radius:10px;box-shadow:0 14px 30px -12px rgba(5,13,31,.7)}
@@ -303,10 +312,13 @@ footer nav{gap:0 !important}
 </div>
 
 <div class="hs-wrap" style="flex: 0 1 340px; min-width: 280px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 16px">
-<div class="hs-tabs" role="group" aria-label="Show a way to ask for a review" style="padding: 4px; display: flex; gap: 4px; background: #13284F; border-radius: 999px">
+<div style="display: flex; align-items: center; gap: 10px">
+<div class="hs-tabs" role="group" aria-label="Show a way to ask for a review" style="padding: 4px; display: flex; gap: 8px; background: #13284F; border-radius: 999px">
 <button type="button" class="hs-pill hs-d0" data-scene="0"><span class="hs-pill-t">Email</span></button>
 <button type="button" class="hs-pill hs-d1" data-scene="1"><span class="hs-pill-t">WhatsApp</span></button>
 <button type="button" class="hs-pill hs-d2" data-scene="2"><span class="hs-pill-t">QR code</span></button>
+</div>
+<button type="button" class="hs-pause" aria-pressed="false" aria-label="Pause the example"><svg class="i-pause" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3v14H7zM14 5h3v14h-3z" fill="currentColor"></path></svg><svg class="i-play" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l11 7-11 7z" fill="currentColor"></path></svg></button>
 </div>
 <div class="hs-phone" role="img" aria-label="A customer gets a review request by email, by WhatsApp or by scanning a QR code, taps the link and leaves a 5-star Google review" style="width: 300px; max-width: 100%; height: 540px; background: #F5F7FA; border: 10px solid #050D1F; border-radius: 46px; box-sizing: border-box; position: relative; overflow: hidden; box-shadow: 0 40px 80px -40px rgba(0,0,0,.7)">
 <div style="position: absolute; top: 14px; left: 50%; width: 84px; height: 22px; margin-left: -42px; border-radius: 999px; background: #050D1F; z-index: 3"></div>
@@ -781,9 +793,16 @@ footer nav{gap:0 !important}
 <script>
 (function(){
   var wrap=document.querySelector('.hs-wrap'),hero=document.getElementById('top');if(!wrap)return;
+  var pauseBtn=wrap.querySelector('.hs-pause'),userPaused=false,hover=false,focusIn=false,offscreen=false;
+  function sync(){var p=userPaused||hover||focusIn||offscreen;hero.classList.toggle('hs-paused',p);}
+  if(pauseBtn){pauseBtn.addEventListener('click',function(){userPaused=!userPaused;pauseBtn.setAttribute('aria-pressed',userPaused);pauseBtn.setAttribute('aria-label',userPaused?'Play the example':'Pause the example');sync();});}
+  var phoneEl=wrap.querySelector('.hs-phone');
+  phoneEl.addEventListener('mouseenter',function(){hover=true;sync();});phoneEl.addEventListener('mouseleave',function(){hover=false;sync();});
+  wrap.addEventListener('focusin',function(e){focusIn=e.target!==pauseBtn;sync();});wrap.addEventListener('focusout',function(){focusIn=false;sync();});
+  if('IntersectionObserver' in window){new IntersectionObserver(function(es){offscreen=!es[0].isIntersecting;sync();}).observe(phoneEl);}
   wrap.querySelectorAll('.hs-pill').forEach(function(b){b.addEventListener('click',function(){
     var n=Number(b.dataset.scene),T=(0.8+5*n)*1000;
-    wrap.setAttribute('data-solo',n);
+    wrap.setAttribute('data-solo',n);focusIn=false;sync();
     if(document.getAnimations){document.getAnimations().forEach(function(a){var nm=a.animationName||'',t=a.effect&&a.effect.target;if(t&&hero.contains(t)&&/^(hs|beat|dot)/.test(nm)){a.currentTime=T;}});}
   });});
 })();
