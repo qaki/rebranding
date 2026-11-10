@@ -86,7 +86,9 @@ a:focus-visible,button:focus-visible{outline:3px solid #C8F135;outline-offset:3p
 @keyframes hsStar3{0%,20.6%{fill:#DCE2EC}21.2%,32%{fill:#F5B700}33.3%,100%{fill:#DCE2EC}}
 @keyframes hsStar4{0%,21.4%{fill:#DCE2EC}22%,32%{fill:#F5B700}33.3%,100%{fill:#DCE2EC}}
 @keyframes hsStar5{0%,22.2%{fill:#DCE2EC}22.8%,32%{fill:#F5B700}33.3%,100%{fill:#DCE2EC}}
-.hs-pill{color:#A9B8D2;animation:hsPill 15s linear infinite}
+.hs-pill{border:0;cursor:pointer;min-height:44px;padding:6px 14px;border-radius:12px;display:flex;flex-direction:column;align-items:center;line-height:1.25;font-family:Archivo,sans-serif;background:transparent;color:#A9B8D2;animation:hsPill 15s linear infinite}
+.hs-pill-t{font-size:13px;font-weight:800}.hs-pill-s{font-size:12px;font-weight:600;opacity:.85}
+.hs-pill:hover{box-shadow:inset 0 0 0 1.5px #4A6396}
 @keyframes hsPill{0%{background:transparent;color:#A9B8D2}1%,32%{background:#C8F135;color:#0B1B3A}33.3%,100%{background:transparent;color:#A9B8D2}}
 .hs-scanline{position:absolute;left:8%;right:8%;top:10%;height:3px;border-radius:3px;background:#C8F135;animation:hsScan 1.6s ease-in-out infinite alternate}
 @keyframes hsScan{from{top:10%}to{top:88%}}
@@ -96,6 +98,11 @@ a:focus-visible,button:focus-visible{outline:3px solid #C8F135;outline-offset:3p
 .hs-g.hs-d0 .gs path{animation-delay:.8s !important}.hs-g.hs-d1 .gs path{animation-delay:5.8s !important}.hs-g.hs-d2 .gs path{animation-delay:10.8s !important}
 @media (prefers-reduced-motion: reduce){
  .hs-scene,.hs-msg,.hs-g,.hs-link,.hs-pill,.gs path,.hs-scanline{animation:none !important}
+ .hs-wrap[data-solo] .hs-scene,.hs-wrap[data-solo] .hs-pill{opacity:0;background:transparent;color:#A9B8D2}
+ .hs-wrap[data-solo="0"] .hs-scene.hs-d0,.hs-wrap[data-solo="1"] .hs-scene.hs-d1,.hs-wrap[data-solo="2"] .hs-scene.hs-d2{opacity:1}
+ .hs-wrap[data-solo] .hs-scene .hs-msg,.hs-wrap[data-solo] .hs-scene .hs-g{opacity:1;transform:none}
+ .hs-wrap[data-solo] .hs-scene .gs path{fill:#F5B700}
+ .hs-wrap[data-solo="0"] .hs-pill.hs-d0,.hs-wrap[data-solo="1"] .hs-pill.hs-d1,.hs-wrap[data-solo="2"] .hs-pill.hs-d2{background:#C8F135;color:#0B1B3A}
  .hs-scene.hs-d0,.hs-scene.hs-d0 .hs-msg,.hs-scene.hs-d0 .hs-g{opacity:1;transform:none}
  .hs-scene.hs-d0 .gs path{fill:#F5B700}
  .hs-pill.hs-d0{background:#C8F135;color:#0B1B3A}
@@ -295,26 +302,26 @@ footer nav{gap:0 !important}
 </div>
 </div>
 
-<div style="flex: 0 1 340px; min-width: 280px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 16px">
-<ul aria-hidden="true" style="margin: 0; padding: 4px; list-style: none; display: flex; gap: 4px; background: #13284F; border-radius: 999px">
-<li class="hs-pill hs-d0" style="padding: 7px 14px; border-radius: 999px; font-size: 13px; font-weight: 700">Email</li>
-<li class="hs-pill hs-d1" style="padding: 7px 14px; border-radius: 999px; font-size: 13px; font-weight: 700">WhatsApp</li>
-<li class="hs-pill hs-d2" style="padding: 7px 14px; border-radius: 999px; font-size: 13px; font-weight: 700">QR code</li>
-</ul>
+<div class="hs-wrap" style="flex: 0 1 340px; min-width: 280px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 16px">
+<div class="hs-tabs" role="group" aria-label="Show a way to ask for a review" style="padding: 4px; display: flex; gap: 4px; background: #13284F; border-radius: 16px">
+<button type="button" class="hs-pill hs-d0" data-scene="0"><span class="hs-pill-t">Email</span><span class="hs-pill-s">Dentist</span></button>
+<button type="button" class="hs-pill hs-d1" data-scene="1"><span class="hs-pill-t">WhatsApp</span><span class="hs-pill-s">Plumber</span></button>
+<button type="button" class="hs-pill hs-d2" data-scene="2"><span class="hs-pill-t">QR code</span><span class="hs-pill-s">Restaurant</span></button>
+</div>
 <div class="hs-phone" role="img" aria-label="A customer gets a review request by email, by WhatsApp or by scanning a QR code, taps the link and leaves a 5-star Google review" style="width: 300px; max-width: 100%; height: 540px; background: #F5F7FA; border: 10px solid #050D1F; border-radius: 46px; box-sizing: border-box; position: relative; overflow: hidden; box-shadow: 0 40px 80px -40px rgba(0,0,0,.7)">
 <div style="position: absolute; top: 14px; left: 50%; width: 84px; height: 22px; margin-left: -42px; border-radius: 999px; background: #050D1F; z-index: 3"></div>
 
 <div class="hs-scene hs-d0">
 <p style="margin: 0; font-size: 13px; font-weight: 700; color: #4A5B7A">Inbox</p>
 <div class="hs-msg hs-d0" style="background: #FFFFFF; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 6px; box-shadow: 0 1px 0 #D5DCE6">
-<div style="display: flex; justify-content: space-between; gap: 8px"><span style="font-size: 13px; font-weight: 800; color: #0B1B3A">Tony's Pizzeria</span><span style="font-size: 12px; color: #4A5B7A">now</span></div>
-<p style="margin: 0; font-size: 13px; font-weight: 700; color: #0B1B3A">How was your experience at Tony's Pizzeria?</p>
-<p style="margin: 0; font-size: 12.5px; line-height: 1.5; color: #2C3A55">Hi there, thank you for your visit at Tony's Pizzeria. How did we do? It takes about 30 seconds and it means a lot to our team:</p>
+<div style="display: flex; justify-content: space-between; gap: 8px"><span style="font-size: 13px; font-weight: 800; color: #0B1B3A">Dentist</span><span style="font-size: 12px; color: #4A5B7A">now</span></div>
+<p style="margin: 0; font-size: 13px; font-weight: 700; color: #0B1B3A">How was your experience at the dentist?</p>
+<p style="margin: 0; font-size: 12.5px; line-height: 1.5; color: #2C3A55">Hi there, thank you for your appointment at the dentist. How did we do? It takes about 30 seconds and it means a lot to our team:</p>
 <span class="hs-link hs-d0" style="align-self: flex-start; font-size: 13px; font-weight: 700; color: #0B1B3A; text-decoration: underline; text-underline-offset: 3px; padding: 2px 4px; margin-left: -4px; border-radius: 6px">Tap here to share your feedback</span>
 </div>
 <div class="hs-g hs-d0">
 <p style="margin: 0; font-size: 12px; font-weight: 700; color: #4A5B7A">Google review</p>
-<p style="margin: 0; font-size: 17px; font-weight: 800; color: #0B1B3A">Tony's Pizzeria</p>
+<p style="margin: 0; font-size: 17px; font-weight: 800; color: #0B1B3A">Dentist</p>
 <div class="hs-stars" style="display: flex; gap: 4px"><svg class="gs gs1" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2l-5.9 3.2 1.3-6.5L2.5 9.3l6.6-.8z"></path></svg><svg class="gs gs2" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2l-5.9 3.2 1.3-6.5L2.5 9.3l6.6-.8z"></path></svg><svg class="gs gs3" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2l-5.9 3.2 1.3-6.5L2.5 9.3l6.6-.8z"></path></svg><svg class="gs gs4" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2l-5.9 3.2 1.3-6.5L2.5 9.3l6.6-.8z"></path></svg><svg class="gs gs5" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2l-5.9 3.2 1.3-6.5L2.5 9.3l6.6-.8z"></path></svg></div>
 <div style="display: flex; flex-direction: column; gap: 6px"><span style="height: 8px; width: 90%; border-radius: 4px; background: #DCE2EC"></span><span style="height: 8px; width: 70%; border-radius: 4px; background: #DCE2EC"></span><span style="height: 8px; width: 80%; border-radius: 4px; background: #DCE2EC"></span></div>
 <span style="align-self: flex-end; background: #0B1B3A; color: #FFFFFF; border-radius: 999px; padding: 8px 18px; font-size: 13px; font-weight: 700">Post</span>
@@ -322,15 +329,15 @@ footer nav{gap:0 !important}
 </div>
 
 <div class="hs-scene hs-d1">
-<div style="display: flex; align-items: center; gap: 10px; padding-bottom: 8px; box-shadow: 0 1px 0 #D5DCE6"><span style="width: 30px; height: 30px; border-radius: 999px; background: #0B1B3A; color: #C8F135; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center">T</span><span style="font-size: 13px; font-weight: 800; color: #0B1B3A">Tony's Pizzeria</span><span style="margin-left: auto; font-size: 12px; font-weight: 700; color: #4A5B7A">WhatsApp</span></div>
+<div style="display: flex; align-items: center; gap: 10px; padding-bottom: 8px; box-shadow: 0 1px 0 #D5DCE6"><span style="width: 30px; height: 30px; border-radius: 999px; background: #0B1B3A; color: #C8F135; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center">P</span><span style="font-size: 13px; font-weight: 800; color: #0B1B3A">Plumber</span><span style="margin-left: auto; font-size: 12px; font-weight: 700; color: #4A5B7A">WhatsApp</span></div>
 <div class="hs-msg hs-d1" style="align-self: flex-start; max-width: 88%; background: #FFFFFF; border-radius: 4px 16px 16px 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 1px 0 #D5DCE6">
-<p style="margin: 0; font-size: 13px; line-height: 1.45; color: #0B1B3A">Tony's Pizzeria: Thanks for your visit! How was it? Tap to tell us (10 sec):</p>
+<p style="margin: 0; font-size: 13px; line-height: 1.45; color: #0B1B3A">Plumber: Thanks for choosing us! How was it? Tap to tell us (10 sec):</p>
 <span class="hs-link hs-d1" style="align-self: flex-start; font-size: 12px; font-weight: 700; color: #0B1B3A; text-decoration: underline; text-underline-offset: 3px; padding: 2px 4px; margin-left: -4px; border-radius: 6px; white-space: nowrap">localpulsehub.com/review/r/7Kd2</span>
 <span style="align-self: flex-end; font-size: 12px; color: #4A5B7A">18:42</span>
 </div>
 <div class="hs-g hs-d1">
 <p style="margin: 0; font-size: 12px; font-weight: 700; color: #4A5B7A">Google review</p>
-<p style="margin: 0; font-size: 17px; font-weight: 800; color: #0B1B3A">Tony's Pizzeria</p>
+<p style="margin: 0; font-size: 17px; font-weight: 800; color: #0B1B3A">Plumber</p>
 <div class="hs-stars" style="display: flex; gap: 4px"><svg class="gs gs1" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2l-5.9 3.2 1.3-6.5L2.5 9.3l6.6-.8z"></path></svg><svg class="gs gs2" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2l-5.9 3.2 1.3-6.5L2.5 9.3l6.6-.8z"></path></svg><svg class="gs gs3" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2l-5.9 3.2 1.3-6.5L2.5 9.3l6.6-.8z"></path></svg><svg class="gs gs4" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2l-5.9 3.2 1.3-6.5L2.5 9.3l6.6-.8z"></path></svg><svg class="gs gs5" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2l-5.9 3.2 1.3-6.5L2.5 9.3l6.6-.8z"></path></svg></div>
 <div style="display: flex; flex-direction: column; gap: 6px"><span style="height: 8px; width: 90%; border-radius: 4px; background: #DCE2EC"></span><span style="height: 8px; width: 70%; border-radius: 4px; background: #DCE2EC"></span><span style="height: 8px; width: 80%; border-radius: 4px; background: #DCE2EC"></span></div>
 <span style="align-self: flex-end; background: #0B1B3A; color: #FFFFFF; border-radius: 999px; padding: 8px 18px; font-size: 13px; font-weight: 700">Post</span>
@@ -349,7 +356,7 @@ footer nav{gap:0 !important}
 </div>
 <div class="hs-g hs-d2">
 <p style="margin: 0; font-size: 12px; font-weight: 700; color: #4A5B7A">Google review</p>
-<p style="margin: 0; font-size: 17px; font-weight: 800; color: #0B1B3A">Tony's Pizzeria</p>
+<p style="margin: 0; font-size: 17px; font-weight: 800; color: #0B1B3A">Restaurant</p>
 <div class="hs-stars" style="display: flex; gap: 4px"><svg class="gs gs1" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2l-5.9 3.2 1.3-6.5L2.5 9.3l6.6-.8z"></path></svg><svg class="gs gs2" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2l-5.9 3.2 1.3-6.5L2.5 9.3l6.6-.8z"></path></svg><svg class="gs gs3" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2l-5.9 3.2 1.3-6.5L2.5 9.3l6.6-.8z"></path></svg><svg class="gs gs4" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2l-5.9 3.2 1.3-6.5L2.5 9.3l6.6-.8z"></path></svg><svg class="gs gs5" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2l-5.9 3.2 1.3-6.5L2.5 9.3l6.6-.8z"></path></svg></div>
 <div style="display: flex; flex-direction: column; gap: 6px"><span style="height: 8px; width: 90%; border-radius: 4px; background: #DCE2EC"></span><span style="height: 8px; width: 70%; border-radius: 4px; background: #DCE2EC"></span><span style="height: 8px; width: 80%; border-radius: 4px; background: #DCE2EC"></span></div>
 <span style="align-self: flex-end; background: #0B1B3A; color: #FFFFFF; border-radius: 999px; padding: 8px 18px; font-size: 13px; font-weight: 700">Post</span>
@@ -768,6 +775,17 @@ footer nav{gap:0 !important}
   }
   addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(frame);}},{passive:true});
   addEventListener('resize',frame);frame();
+})();
+</script>
+
+<script>
+(function(){
+  var wrap=document.querySelector('.hs-wrap'),hero=document.getElementById('top');if(!wrap)return;
+  wrap.querySelectorAll('.hs-pill').forEach(function(b){b.addEventListener('click',function(){
+    var n=Number(b.dataset.scene),T=(0.8+5*n)*1000;
+    wrap.setAttribute('data-solo',n);
+    if(document.getAnimations){document.getAnimations().forEach(function(a){var nm=a.animationName||'',t=a.effect&&a.effect.target;if(t&&hero.contains(t)&&/^(hs|beat|dot)/.test(nm)){a.currentTime=T;}});}
+  });});
 })();
 </script>
 
