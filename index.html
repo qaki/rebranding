@@ -86,8 +86,8 @@ a:focus-visible,button:focus-visible{outline:3px solid #C8F135;outline-offset:3p
 @keyframes hsStar3{0%,20.6%{fill:#DCE2EC}21.2%,32%{fill:#F5B700}33.3%,100%{fill:#DCE2EC}}
 @keyframes hsStar4{0%,21.4%{fill:#DCE2EC}22%,32%{fill:#F5B700}33.3%,100%{fill:#DCE2EC}}
 @keyframes hsStar5{0%,22.2%{fill:#DCE2EC}22.8%,32%{fill:#F5B700}33.3%,100%{fill:#DCE2EC}}
-.hs-pill{border:0;cursor:pointer;min-height:44px;padding:6px 14px;border-radius:12px;display:flex;flex-direction:column;align-items:center;line-height:1.25;font-family:Archivo,sans-serif;background:transparent;color:#A9B8D2;animation:hsPill 15s linear infinite}
-.hs-pill-t{font-size:13px;font-weight:800}.hs-pill-s{font-size:12px;font-weight:600;opacity:.85}
+.hs-pill{position:relative;border:0;cursor:pointer;padding:7px 14px;border-radius:999px;display:flex;align-items:center;line-height:1.2;font-family:Archivo,sans-serif;background:transparent;color:#A9B8D2;animation:hsPill 15s linear infinite}
+.hs-pill-t{font-size:13px;font-weight:800}.hs-pill::after{content:"";position:absolute;inset:-6px -2px}.hs-pill-s{font-size:12px;font-weight:600;opacity:.85}
 .hs-pill:hover{box-shadow:inset 0 0 0 1.5px #4A6396}
 @keyframes hsPill{0%{background:transparent;color:#A9B8D2}1%,32%{background:#C8F135;color:#0B1B3A}33.3%,100%{background:transparent;color:#A9B8D2}}
 .hs-scanline{position:absolute;left:8%;right:8%;top:10%;height:3px;border-radius:3px;background:#C8F135;animation:hsScan 1.6s ease-in-out infinite alternate}
@@ -303,7 +303,7 @@ footer nav{gap:0 !important}
 </div>
 
 <div class="hs-wrap" style="flex: 0 1 340px; min-width: 280px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 16px">
-<div class="hs-tabs" role="group" aria-label="Show a way to ask for a review" style="padding: 4px; display: flex; gap: 4px; background: #13284F; border-radius: 16px">
+<div class="hs-tabs" role="group" aria-label="Show a way to ask for a review" style="padding: 4px; display: flex; gap: 4px; background: #13284F; border-radius: 999px">
 <button type="button" class="hs-pill hs-d0" data-scene="0"><span class="hs-pill-t">Email</span></button>
 <button type="button" class="hs-pill hs-d1" data-scene="1"><span class="hs-pill-t">WhatsApp</span></button>
 <button type="button" class="hs-pill hs-d2" data-scene="2"><span class="hs-pill-t">QR code</span></button>
