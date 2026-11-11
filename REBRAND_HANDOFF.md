@@ -38,12 +38,38 @@ Hard rules for this whole session:
 - First create and switch to a new local branch called `rebrand`. Work only there.
 - NEVER run git commit, git push, git merge, or anything that changes GitHub or Vercel until I write the exact word "approved" for that specific phase. Even then, commit only; push only when I separately say "push".
 - Do not change any copy, SEO, metadata, JSON-LD, URLs, routes, server actions, database code, Paddle, Supabase or email-sending logic. This is a visual rebrand only. If something looks like it needs a text change, ask me first.
+- Do not change how the SaaS works: no logic, no architecture, no refactoring, no renaming or moving files, no new packages, no config changes. Touch only styling, markup and visual components. Everything else stays exactly as it is.
+- Follow section B0 (Scope lock) in the brief. If any task seems to need a change outside it, stop and ask me first.
 - Work phase by phase as the brief says. At the end of each phase: run `npm run lint && npm run build`, then stop and give me the list of localhost URLs to check. Wait for my feedback.
 ```
 
 ---
 
 ## Part B — For Claude Code: the brief
+
+### B0. Scope lock — read this first, it overrides everything else
+
+This is a **visual rebrand only**. The SaaS must work exactly the same before and after: same features, same data, same flows, same URLs, same SEO. The founder will review every change on localhost.
+
+**You MAY change (only these):**
+- Styling: Tailwind classes, `app/globals.css` (`@theme` tokens, keyframes, base styles).
+- Fonts in `app/layout.tsx` (only the `next/font` imports and the CSS variables/className on `<html>`/`<body>` — nothing else in that file).
+- JSX markup and visual structure inside existing UI components and pages (wrappers, classNames, icons, decorative SVGs, layout).
+- New purely visual client components (e.g. `hero-phone.tsx`, `pulse-line.tsx`, reveal/motion helpers in `components/motion/`).
+- Logo/icon assets: `components/logo.tsx`, `app/favicon.ico`, `app/icon.png`, `app/apple-icon.png`, `public/` logo files, and the visual part of `components/og-image.tsx`.
+
+**You must NOT change (not even "small improvements"):**
+- Any text the user sees (headings, body, buttons, labels, errors, emails), page titles, meta descriptions, canonicals, Open Graph/Twitter text, JSON-LD, `sitemap.ts`, `robots.ts`.
+- Business logic, data fetching, anything in `lib/`, server actions (`actions.ts`), API routes (`app/api/**`), `proxy.ts`, Supabase clients/queries/migrations, Paddle, Resend, Twilio, OpenAI, Google code, cron jobs, auth flows, form handling, validation, redirects, cookies, env variables.
+- Architecture: don't rename, move, split or merge files; don't change folder structure, routing, rendering mode (`revalidate`, `dynamic`), server/client boundaries of existing components (don't add `"use client"` to a server component — put the interactive part in a new small client child instead).
+- `package.json`, lockfile, `next.config.ts`, `tsconfig.json`, ESLint/Vitest config, `vercel.json`. No new npm packages — Framer Motion and `next/font` are already enough.
+- Props, function names, exports or behavior of existing components that other files depend on.
+- Tests, unless a test checks a className/markup you changed — then ask first.
+- Anything not needed for the current phase. No drive-by fixes, no "while I'm here" cleanups, no reformatting of untouched code.
+
+**If something seems to need a change outside the MAY list** (a bug you notice, a text that doesn't fit, a component that would be easier to refactor): don't do it. Write it down and ask the founder at the end of the phase.
+
+**Before saying a phase is done:** run `git diff --stat` and `git diff`, and confirm in your message that every changed file is on the MAY list. Call out anything that's borderline.
 
 ### B1. What this is
 
