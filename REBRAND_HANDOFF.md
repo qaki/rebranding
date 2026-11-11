@@ -110,8 +110,10 @@ Also update the semantic tokens (`--color-primary`, `--color-ring`, `--color-bor
 - Look at how the preview sizes headings with `clamp()` and copy those scales. The hero H1 must not dominate a 1440×900 screen — the founder already complained once that it was too big.
 
 **Logo**
-- Mark: a rising arrow. SVG (viewBox 32×32):
-  `<path d="M5 23.5l7.5-8.5 5 5L26 9M19 9h7v7" fill="none" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>`
+- **Use the final files in `../rebranding/logo/`** (see its README): `logo-mark.svg` (app icon), `logo-full-on-navy.svg` / `logo-full-on-white.svg` (full logo, letters already outlined), `favicon.ico`, `icon-*.png`. Copy them into `public/` / `app/` as needed. Don't redraw them.
+- Mark: a rising arrow, three exact 45° strokes + right-angle head. SVG (viewBox 32×32):
+  `<path d="M5.5 22.5L12.5 15.5L16.5 19.5L26.5 9.5M19.5 9.5H26.5V16.5" fill="none" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>`
+  (The preview HTML still uses an older, slightly uneven version of this path — the logo kit's version is the final one.)
 - **App icon / favicon / nav mark:** lime rounded square (radius ≈ 24% of size) with the arrow in navy.
 - **On navy:** lime tile + white Anton wordmark "LocalPulseHub" (one word, no colored "Pulse").
 - **On white (docs, emails, light surfaces):** navy arrow, navy wordmark, no tile needed.
