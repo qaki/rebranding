@@ -1,10 +1,10 @@
 # LocalPulseHub logo kit
 
-All logos are pure vectors (SVG). The arrow has three exact 45° strokes and a right-angle head, drawn on a 32×32 grid. The "LOCALPULSEHUB" letters are Anton turned into shapes, so no font is needed.
+All logos are pure vectors (SVG). The arrow has three exact 45° strokes and a right-angle head, drawn on a 32×32 grid with a 2.6 stroke (3.0 in the 16/32px favicons so they stay crisp). The "LOCALPULSEHUB" letters are Anton turned into shapes, so no font is needed.
 
 | File | What it is | Use it for |
 |---|---|---|
-| `logo-mark.svg` | **Logo mark / app icon**: lime square + navy arrow | favicon, app icon, social profile pictures |
+| `logo-mark.svg` (`logo-mark-small.svg` for 16–32px) | **Logo mark / app icon**: lime square + navy arrow | favicon, app icon, social profile pictures |
 | `logo-full-on-navy.svg` | **Full logo** (transparent), white text | website header, navy backgrounds |
 | `logo-full-on-white.svg` | **Full logo** (transparent), navy text | documents, invoices, emails, white backgrounds |
 | `logo-full-navy-bg.svg/.png` | Full logo with navy background + padding | sharing, banners |
