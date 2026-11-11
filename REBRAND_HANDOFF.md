@@ -21,6 +21,14 @@ This brief tells the Claude running inside VS Code how to bring the new LocalPul
 6. Run `npm run dev` in a second terminal and open http://localhost:3000. Claude will tell you which pages to check after each phase.
 7. You only say **"approved"** when you're happy with what you see. Until then nothing is committed or pushed.
 
+### Option 2 — no second folder (easier)
+
+Skip steps 1 and 4. Open only `localpulsehub` in VS Code and paste this line **above** the starter prompt:
+
+```
+Before anything else: download https://github.com/qaki/rebranding (public) into a temporary folder OUTSIDE this project (e.g. run `git clone --depth 1 https://github.com/qaki/rebranding.git` inside the system temp dir), and treat that folder as "../rebranding" everywhere in the brief. Never put the preview files inside this repo. The only files you may copy into this project are the logo files from its logo/ folder, when the brief says so.
+```
+
 ### Starter prompt (copy everything in the box)
 
 ```
