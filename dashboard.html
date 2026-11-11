@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Overview | LocalPulseHub (dashboard design preview)</title>
+<link rel="icon" href="logo/favicon.ico">
+<style>
+@font-face{font-family:Anton;src:url(fonts/anton-latin-400-normal.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Archivo;src:url(fonts/archivo-latin-400-normal.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Archivo;src:url(fonts/archivo-latin-500-normal.woff2) format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:Archivo;src:url(fonts/archivo-latin-600-normal.woff2) format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:Archivo;src:url(fonts/archivo-latin-700-normal.woff2) format('woff2');font-weight:700;font-display:swap}
+:root{
+  --navy:#0B1B3A;--deep:#071230;--nav-hi:#152B57;--nav-text:#B9C6DE;--lime:#C8F135;--signal:#FF6B2C;
+  --ink:#2C3A55;--muted:#4A5B7A;--line:#D5DCE6;--line-soft:#E4E9F0;--mist:#F3F6FA;--white:#fff;
+  --star:#E8A400;--ok:#13804C;--ok-bg:#E7F5EE;--warn:#9A5B00;--warn-bg:#FFF4DE;--sig-bg:#FFF0E8;--sig-ink:#B23F0A;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:Archivo,system-ui,sans-serif;font-size:15px;line-height:1.5;color:var(--ink);background:var(--mist);-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+::selection{background:var(--lime);color:var(--navy)}
+button,textarea,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--navy);outline-offset:2px;border-radius:6px}
+.side :focus-visible{outline-color:var(--lime)}
+svg.i{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* shell */
+.app{display:grid;grid-template-columns:252px 1fr;min-height:100vh;background:linear-gradient(90deg,var(--navy) 252px,var(--mist) 252px)}
+.side{background:var(--navy);color:var(--nav-text);display:flex;flex-direction:column;padding:20px 14px;position:sticky;top:0;height:100vh}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px 18px;text-decoration:none}
+.brand .tile{width:32px;height:32px;border-radius:8px;background:var(--lime);display:grid;place-items:center}
+.brand b{font-family:Anton;font-weight:400;font-size:19px;letter-spacing:.02em;color:#fff;line-height:1;text-transform:uppercase}
+.loc{width:100%;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:var(--deep);border:1px solid #1E3463;color:#fff;cursor:pointer;text-align:left;transition:border-color .15s}
+.loc:hover{border-color:#2D4A82}
+.loc small{display:block;color:var(--nav-text);font-size:12px;line-height:1.2}
+.loc span{flex:1;min-width:0;font-weight:600;font-size:14px;line-height:1.25}
+nav.menu{margin-top:18px;display:flex;flex-direction:column;gap:2px}
+nav.menu a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:9px;color:var(--nav-text);text-decoration:none;font-weight:500;font-size:14.5px;transition:background-color .15s,color .15s}
+nav.menu a:hover{background:#11244A;color:#fff}
+nav.menu a[aria-current]{background:var(--nav-hi);color:#fff;font-weight:600}
+nav.menu a[aria-current] svg{color:var(--lime)}
+nav.menu .count{margin-left:auto;background:var(--lime);color:var(--navy);font-size:11.5px;font-weight:700;border-radius:999px;padding:1px 8px}
+.side .foot{margin-top:auto;border-top:1px solid #1E3463;padding-top:12px}
+.side .foot a{display:flex;align-items:center;gap:12px;padding:10px 12px;color:var(--nav-text);text-decoration:none;font-size:14.5px;border-radius:9px}
+.side .foot a:hover{background:#11244A;color:#fff}
+
+main{min-width:0;padding:30px 40px 48px}
+.wrap{max-width:1180px;margin:0 auto}
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap}
+h1{font-family:Anton;font-weight:400;font-size:34px;line-height:1;letter-spacing:.005em;color:var(--navy);margin:0;text-transform:uppercase}
+.sub{margin:8px 0 0;color:var(--muted);font-size:14px}
+.sub .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ok);margin:0 6px 1px 2px}
+.preview-tag{font-size:12px;color:var(--muted);border:1px dashed var(--line);border-radius:999px;padding:4px 10px;background:#fff}
+
+/* stats strip: one panel, three readings */
+.stats{margin-top:24px;display:grid;grid-template-columns:repeat(3,1fr);background:#fff;border:1px solid var(--line);border-radius:14px}
+.stat{padding:18px 22px}
+.stat+.stat{border-left:1px solid var(--line-soft)}
+.stat .k{font-size:13px;color:var(--muted);font-weight:500}
+.stat .v{margin-top:4px;display:flex;align-items:baseline;gap:8px;font-size:30px;font-weight:700;color:var(--navy);letter-spacing:-.01em;line-height:1.1}
+.stat .v .stars{display:flex;gap:2px;transform:translateY(-2px)}
+.stat .s{margin-top:4px;font-size:13px;color:var(--muted)}
+.stat .s b{color:var(--ink);font-weight:600}
+.up{color:var(--ok);font-weight:600}
+
+/* main grid */
+.grid{margin-top:28px;display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:24px;align-items:start}
+.sec-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+h2{font-size:17px;font-weight:700;color:var(--navy);margin:0;letter-spacing:-.005em}
+.sec-h p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:9px;font-weight:600;font-size:14px;padding:9px 14px;cursor:pointer;border:1px solid transparent;transition:background-color .15s,border-color .15s,transform .1s,color .15s}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-line{background:#fff;border-color:var(--line);color:var(--navy)}
+.btn-line:hover{border-color:var(--navy)}
+.btn-lime{background:var(--lime);color:var(--navy);font-weight:700}
+.btn-lime:hover{background:#B9E42A}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-navy:hover{background:#13285A}
+.spin{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* inbox list */
+.inbox{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.filters{display:flex;gap:6px;padding:10px 12px;border-bottom:1px solid var(--line-soft)}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 11px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer}
+.chip[aria-pressed=true]{background:var(--navy);border-color:var(--navy);color:#fff}
+.row{width:100%;display:grid;grid-template-columns:1fr auto;gap:6px 16px;padding:16px 18px;border:0;border-top:1px solid var(--line-soft);background:#fff;text-align:left;cursor:pointer;position:relative;transition:background-color .15s}
+.row:first-of-type{border-top:0}
+.row:hover{background:#F8FAFC}
+.row[aria-current=true]{background:#EEF3FB;box-shadow:inset 0 0 0 1px #B8C6DE}
+.row .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.stars{display:inline-flex;gap:1px}
+.stars svg{width:14px;height:14px}
+.on{fill:var(--star);stroke:none}.off{fill:#D9DFE8;stroke:none}
+.who{font-weight:600;color:var(--navy);font-size:14px}
+.meta{font-size:12.5px;color:var(--muted);white-space:nowrap}
+.txt{grid-column:1/-1;margin:0;font-size:14px;color:var(--ink);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.foot-row{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:var(--muted)}
+.tag{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:600}
+.t-alert{background:var(--sig-bg);color:var(--sig-ink)}
+.t-alert i{width:7px;height:7px;border-radius:50%;background:var(--signal);display:inline-block}
+.st{display:inline-flex;align-items:center;gap:5px;font-weight:600}
+.st svg{width:14px;height:14px}
+.st-pub{color:var(--ok)}.st-sch{color:var(--warn)}.st-dr{color:var(--navy)}
+.st-dr .sp{width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 2px #E4F5B0}
+.pop{animation:pop .45s var(--ease)}
+@keyframes pop{0%{transform:scale(.4);opacity:0}100%{transform:none;opacity:1}}
+
+/* right column panels */
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}
+.panel+.panel{margin-top:20px}
+.ph{display:flex;align-items:center;gap:8px;font-weight:700;color:var(--navy);font-size:15px}
+.ph .lime-ic{width:26px;height:26px;border-radius:7px;background:var(--navy);display:grid;place-items:center}
+.ph .lime-ic svg{width:15px;height:15px;color:var(--lime)}
+.ctx{margin-top:14px;background:var(--mist);border-radius:10px;padding:12px}
+.ctx .r1{display:flex;justify-content:space-between;align-items:center;font-size:13px}
+.ctx .r1 b{color:var(--navy)}
+.ctx p{margin:6px 0 0;font-size:13px;color:var(--muted);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.ctx small{display:block;margin-top:6px;font-size:12px;color:var(--muted)}
+.note{margin-top:12px;display:flex;gap:8px;align-items:flex-start;border-radius:10px;padding:9px 11px;font-size:13px}
+.note svg{width:15px;height:15px;margin-top:2px}
+.n-warn{background:var(--warn-bg);color:var(--warn)}
+.n-ok{background:var(--ok-bg);color:var(--ok)}
+.draft-wrap{position:relative;margin-top:14px}
+textarea{width:100%;min-height:168px;resize:vertical;border:1px solid var(--line);border-radius:10px;padding:12px;font-size:14px;line-height:1.55;color:var(--ink);background:#fff;transition:border-color .15s,opacity .2s}
+textarea:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 3px rgba(11,27,58,.12)}
+textarea.writing{opacity:.35}
+.final{margin-top:14px;border-radius:10px;padding:12px;background:var(--ok-bg);font-size:14px;line-height:1.55}
+.acts{margin-top:12px;display:grid;gap:8px}
+.acts .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.acts .btn{width:100%;padding:11px 14px}
+.live{margin-top:10px;font-size:13px;color:var(--ok);display:flex;align-items:center;gap:6px;font-weight:600}
+.live svg{width:14px;height:14px}
+.swap{animation:swap .22s var(--ease)}
+@keyframes swap{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* trend */
+.trend-h{display:flex;justify-content:space-between;align-items:baseline}
+.trend-h span{font-size:13px;color:var(--muted)}
+.bars{margin-top:16px;display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;height:110px}
+.bar{display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.bar i{display:block;width:100%;max-width:26px;border-radius:5px 5px 2px 2px;background:#C9D3E3;transform-origin:bottom;animation:grow .5s var(--ease) both}
+.bar.today i{background:var(--navy)}
+.bar small{font-size:11.5px;color:var(--muted)}
+.bar b{font-size:11.5px;font-weight:600;color:var(--navy)}
+@keyframes grow{from{transform:scaleY(0)}}
+
+.locs{list-style:none;margin:0;padding:0}
+.locs li{display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--line-soft);font-size:14px}
+.locs li:first-child{border-top:0;padding-top:4px}
+.locs li span{flex:1;color:var(--navy);font-weight:600}
+.locs .ok{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ok);font-weight:600}
+.locs .ok i{width:7px;height:7px;border-radius:50%;background:var(--ok)}
+
+/* toast */
+.toast{position:fixed;right:24px;bottom:24px;background:var(--navy);color:#fff;border-radius:12px;padding:12px 16px 12px 14px;display:flex;gap:12px;align-items:center;box-shadow:0 12px 32px -12px rgba(7,18,48,.45);transform:translateY(16px);opacity:0;pointer-events:none;transition:transform .25s var(--ease),opacity .2s}
+.toast.show{transform:none;opacity:1;pointer-events:auto}
+.toast .ck{width:26px;height:26px;border-radius:50%;background:var(--lime);display:grid;place-items:center;color:var(--navy)}
+.toast .ck svg{width:15px;height:15px;stroke-width:3}
+.toast b{display:block;font-size:14px}
+.toast small{color:var(--nav-text);font-size:12.5px}
+
+/* mobile */
+.mtop{display:none}
+@media (max-width:1100px){.grid{grid-template-columns:1fr}}
+@media (max-width:900px){
+  .app{grid-template-columns:1fr;background:var(--mist)}
+  .side{display:none}
+  .mtop{display:flex;align-items:center;gap:10px;background:var(--navy);padding:12px 16px;position:sticky;top:0;z-index:5}
+  .mtop .brand{padding:0;margin-right:auto}
+  .mtop button{background:transparent;border:1px solid #1E3463;color:#fff;border-radius:8px;padding:7px 12px;font-weight:600;font-size:14px}
+  .mnav{display:flex;gap:4px;overflow-x:auto;background:var(--navy);padding:0 12px 10px;scrollbar-width:none}
+  .mnav a{flex:none;color:var(--nav-text);text-decoration:none;font-size:14px;font-weight:500;padding:7px 12px;border-radius:999px}
+  .mnav a[aria-current]{background:var(--nav-hi);color:#fff}
+  main{padding:22px 16px 40px}
+  h1{font-size:28px}
+  .stats{grid-template-columns:1fr}
+  .stat+.stat{border-left:0;border-top:1px solid var(--line-soft)}
+  .stat{padding:14px 18px}
+}
+@media (min-width:901px){.mnav{display:none}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="star" viewBox="0 0 24 24"><path d="M12 2.5l2.95 5.98 6.6.96-4.78 4.65 1.13 6.57L12 17.56l-5.9 3.1 1.13-6.57L2.45 9.44l6.6-.96z"/></symbol>
+  <symbol id="arrow" viewBox="0 0 32 32"><path d="M5.5 22.5L12.5 15.5L16.5 19.5L26.5 9.5M19.5 9.5H26.5V16.5" fill="none" stroke="#0B1B3A" stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<div class="mtop">
+  <a class="brand" href="index.html"><span class="tile"><svg width="20" height="20"><use href="#arrow"/></svg></span><b>LocalPulseHub</b></a>
+  <button type="button">Log out</button>
+</div>
+<nav class="mnav" aria-label="Dashboard">
+  <a href="#" aria-current="page">Overview</a><a href="#">Review Inbox</a><a href="#">AI Replies</a><a href="#">Get Reviews</a><a href="#">Analytics</a><a href="#">Locations</a><a href="#">Automation</a><a href="#">Support</a><a href="#">Settings</a>
+</nav>
+
+<div class="app">
+  <aside class="side">
+    <a class="brand" href="index.html" aria-label="LocalPulseHub home"><span class="tile"><svg width="20" height="20"><use href="#arrow"/></svg></span><b>LocalPulseHub</b></a>
+    <button class="loc" type="button" aria-label="Choose location">
+      <svg class="i" viewBox="0 0 24 24"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/></svg>
+      <span><small>Location</small>All locations</span>
+      <svg class="i" viewBox="0 0 24 24" style="width:16px"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
+    <nav class="menu" aria-label="Dashboard">
+      <a href="#" aria-current="page"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>Overview</a>
+      <a href="#"><svg class="i" viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>Review Inbox</a>
+      <a href="#"><svg class="i" viewBox="0 0 24 24"><path d="M12 3l1.8 4.9L19 9.7l-5.2 1.8L12 16.5l-1.8-5L5 9.7l5.2-1.8z"/><path d="M19 15l.7 1.8 1.8.7-1.8.7L19 20l-.7-1.8-1.8-.7 1.8-.7z"/></svg>AI Replies</a>
+      <a href="#"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v.01M14 21h7v-4"/></svg>Get Reviews<span class="count" aria-label="2 new feedback">2</span></a>
+      <a href="#"><svg class="i" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M8 17v-4M13 17V7M18 17v-7"/></svg>Analytics</a>
+      <a href="#"><svg class="i" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>Locations</a>
+      <a href="#"><svg class="i" viewBox="0 0 24 24"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></svg>Automation</a>
+      <a href="#"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="m4.9 4.9 4.3 4.3M14.8 14.8l4.3 4.3M14.8 9.2l4.3-4.3M4.9 19.1l4.3-4.3"/></svg>Support</a>
+      <a href="#"><svg class="i" viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>Settings</a>
+    </nav>
+    <div class="foot"><a href="index.html"><svg class="i" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></svg>Log out</a></div>
+  </aside>
+
+  <main id="main">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <h1>Hello, Qlirim</h1>
+          <p class="sub"><span class="dot"></span>Bright Smile Dental · Active</p>
+        </div>
+        <span class="preview-tag">Design preview · sample data</span>
+      </div>
+
+      <section class="stats" aria-label="Review stats">
+        <div class="stat"><div class="k">Avg. Rating</div><div class="v">4.6<span class="stars" aria-hidden="true"><svg class="on" width="16" height="16"><use href="#star"/></svg></span></div><div class="s"><b>128 reviews</b> total · <span class="up">+0.3</span> this month</div></div>
+        <div class="stat"><div class="k">Reviews</div><div class="v">128</div><div class="s"><b>121</b> published · <b>4</b> pending</div></div>
+        <div class="stat"><div class="k">Avg. Response Time</div><div class="v">1.4h</div><div class="s">from review to published reply</div></div>
+      </section>
+
+      <div class="grid">
+        <section aria-labelledby="inbox-h">
+          <div class="sec-h">
+            <div><h2 id="inbox-h">Live Review Inbox</h2><p>Synced with Google</p></div>
+            <button class="btn btn-line" id="fetch" type="button"><svg class="i" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg><span>Fetch reviews</span></button>
+          </div>
+          <div class="inbox">
+            <div class="filters" role="group" aria-label="Filter reviews">
+              <button class="chip" aria-pressed="true" data-f="all">All</button>
+              <button class="chip" aria-pressed="false" data-f="todo">Needs reply</button>
+              <button class="chip" aria-pressed="false" data-f="low">1–2 stars</button>
+            </div>
+            <div id="list"></div>
+          </div>
+        </section>
+
+        <aside aria-label="Reply and stats">
+          <section class="panel" id="draft" aria-live="polite"></section>
+          <section class="panel" aria-labelledby="trend-h">
+            <div class="trend-h"><h2 id="trend-h">Rating trend (7 days)</h2><span>avg. per day</span></div>
+            <div class="bars" id="bars"></div>
+          </section>
+          <section class="panel" aria-labelledby="loc-h">
+            <h2 id="loc-h" style="margin-bottom:10px">Locations</h2>
+            <ul class="locs">
+              <li><svg class="i" viewBox="0 0 24 24" style="color:var(--muted)"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/></svg><span>Main Street</span><em class="ok" style="font-style:normal"><i></i>Connected</em></li>
+              <li><svg class="i" viewBox="0 0 24 24" style="color:var(--muted)"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/></svg><span>Eastside</span><em class="ok" style="font-style:normal"><i></i>Connected</em></li>
+            </ul>
+          </section>
+        </aside>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast" role="status"><span class="ck"><svg class="i" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><div><b id="tt"></b><small id="ts"></small></div></div>
+
+<script>
+(function(){
+var R=[
+ {id:1,who:'James R.',r:1,lang:'English',ago:'12 min ago',loc:'Main Street',st:'drafted',
+  t:'Waited 45 minutes past my appointment time and nobody told us why. The cleaning itself was fine but I won\'t sit there that long again.',
+  d:'Hi James, thank you for telling us, and we\'re sorry. Waiting 45 minutes without an update isn\'t the experience we want for anyone. We\'re looking at what happened with the schedule that day. If you\'re open to it, please call the front desk and ask for our office manager — we\'d like to make it right.\n\nThe Bright Smile Dental Team'},
+ {id:2,who:'Sarah M.',r:5,lang:'English',ago:'1 h ago',loc:'Main Street',st:'drafted',
+  t:'Dr. Patel and the whole team made my cleaning completely painless. I booked my next visit before I even left the chair!',
+  d:'Hi Sarah, this made our day — thank you! We\'re so glad the cleaning felt easy, and we\'ll pass your kind words on to Dr. Patel. See you at your next visit!\n\nThe Bright Smile Dental Team'},
+ {id:3,who:'Lena K.',r:2,lang:'German',ago:'3 h ago',loc:'Eastside',st:'scheduled',
+  t:'Freundliches Personal, aber die Parkplatzsituation ist wirklich schwierig. Ich bin fast zu spät gekommen.',
+  d:'Hallo Lena, vielen Dank für Ihr ehrliches Feedback. Es freut uns, dass Sie unser Team als freundlich erlebt haben. Die Parksituation ist leider schwierig – hinter dem Gebäude gibt es zusätzliche Plätze, die wir künftig bei der Terminbestätigung erwähnen.\n\nIhr Team von Bright Smile Dental'},
+ {id:4,who:'Ana L.',r:4,lang:'Spanish',ago:'Yesterday',loc:'Eastside',st:'published',rep:'2 h after the review',
+  t:'Muy amables y puntuales. Recomiendo esta clínica a toda mi familia.',
+  d:'¡Hola Ana! Muchas gracias por tus palabras y por recomendarnos a tu familia. Será un gusto atenderlos.\n\nEl equipo de Bright Smile Dental'},
+ {id:5,who:'Mike T.',r:5,lang:'English',ago:'2 days ago',loc:'Main Street',st:'published',rep:'48 min after the review',
+  t:'Best dentist in town. Fast, friendly, and they actually explain what they\'re doing.',
+  d:'Thanks so much, Mike! We think explaining each step matters — glad it showed. See you next time!\n\nThe Bright Smile Dental Team'}
+];
+var sel=1,filter='all';
+var I={
+ star:'<svg viewBox="0 0 24 24"><use href="#star"/></svg>',
+ check:'<svg class="i" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>',
+ clock:'<svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
+ spark:'<svg class="i" viewBox="0 0 24 24"><path d="M12 3l1.8 4.9L19 9.7l-5.2 1.8L12 16.5l-1.8-5L5 9.7l5.2-1.8z"/></svg>',
+ send:'<svg class="i" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>',
+ ref:'<svg class="i" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg>',
+ pen:'<svg class="i" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>'
+};
+function stars(n){var s='';for(var i=0;i<5;i++)s+='<svg class="'+(i<n?'on':'off')+'" viewBox="0 0 24 24"><use href="#star"/></svg>';return '<span class="stars" role="img" aria-label="'+n+' out of 5 stars">'+s+'</span>'}
+function status(r){
+ if(r.st==='published')return '<span class="st st-pub">'+I.check+'AI reply published</span>';
+ if(r.st==='scheduled')return '<span class="st st-sch">'+I.clock+'Scheduled — auto-publishing soon</span>';
+ return '<span class="st st-dr"><span class="sp"></span>AI reply drafted</span>';
+}
+function list(){
+ var h='';R.filter(function(r){return filter==='all'||(filter==='todo'&&r.st!=='published')||(filter==='low'&&r.r<=2)}).forEach(function(r){
+  h+='<button class="row" type="button" data-id="'+r.id+'"'+(r.id===sel?' aria-current="true"':'')+'>'+
+   '<span class="top">'+stars(r.r)+'<span class="who">'+r.who+'</span>'+(r.r===1?'<span class="tag t-alert"><i></i>1-star alert sent</span>':'')+'</span>'+
+   '<span class="meta">'+r.lang+' · '+r.ago+'</span>'+
+   '<p class="txt">'+r.t+'</p>'+
+   '<span class="foot-row"><span>'+r.loc+'</span><span id="st'+r.id+'">'+status(r)+'</span></span></button>';
+ });
+ document.getElementById('list').innerHTML=h;
+}
+function panel(anim){
+ var r=R.find(function(x){return x.id===sel}),p=document.getElementById('draft'),sent=r.r>=4?'Positive':'Negative';
+ var ctx='<div class="ctx"><div class="r1"><b>Replying to '+r.who+'</b>'+stars(r.r)+'</div><p>“'+r.t+'”</p><small>'+r.loc+'</small></div>';
+ if(r.st==='published'){
+  p.innerHTML='<div class="ph"><span class="lime-ic" style="background:var(--ok-bg)"><svg class="i" viewBox="0 0 24 24" style="color:var(--ok)"><path d="M20 6 9 17l-5-5"/></svg></span>Reply published</div>'+ctx+
+   '<div class="final">'+r.d.replace(/\n/g,'<br>')+'</div><p class="live">'+I.check+'Live on Google · '+r.rep+'</p>'+
+   '<div class="acts"><button class="btn btn-line" type="button">'+I.ref+'Fix reply (regenerate &amp; update on Google)</button></div>';
+ } else {
+  p.innerHTML='<div class="ph"><span class="lime-ic">'+I.spark+'</span>AI Draft · '+sent+'</div>'+ctx+
+   (r.st==='scheduled'?'<p class="note n-warn">'+I.clock+'Auto-pilot will publish this draft automatically.</p>':'')+
+   '<div class="draft-wrap"><label for="ta" class="sr" style="position:absolute;left:-9999px">AI reply draft</label><textarea id="ta">'+r.d+'</textarea></div>'+
+   '<div class="acts">'+(r.st==='scheduled'?'':'<button class="btn btn-lime" id="pub" type="button">'+I.send+'<span>Publish to Google</span></button>')+
+   '<div class="two"><button class="btn btn-line" id="regen" type="button">'+I.ref+'<span>Regenerate</span></button><button class="btn btn-line" id="save" type="button" disabled>'+I.pen+'<span>Save edit</span></button></div></div>';
+ }
+ if(anim){p.classList.remove('swap');void p.offsetWidth;p.classList.add('swap');}
+ var ta=document.getElementById('ta'),save=document.getElementById('save');
+ if(ta)ta.addEventListener('input',function(){save.disabled=false;save.lastChild.textContent='Save edit'});
+ if(save)save.addEventListener('click',function(){r.d=ta.value;save.disabled=true;save.innerHTML=I.check+'<span>Saved</span>'});
+ var pub=document.getElementById('pub');
+ if(pub)pub.addEventListener('click',function(){
+  pub.disabled=true;pub.lastChild.textContent='Publishing…';
+  setTimeout(function(){r.d=ta.value;r.st='published';r.rep='just now';list();panel(true);
+   var s=document.getElementById('st'+r.id);if(s){s.firstChild.classList.add('pop')}
+   toast('Reply published — '+r.lang,r.loc);},900);
+ });
+ var rg=document.getElementById('regen');
+ if(rg)rg.addEventListener('click',function(){
+  rg.disabled=true;rg.firstChild.classList.add('spin');rg.lastChild.textContent='Writing…';ta.classList.add('writing');
+  setTimeout(function(){ta.value=r.d.replace(/^Hi |^Hallo |^¡Hola /,function(m){return m==='Hi '?'Hello ':m});ta.classList.remove('writing');rg.disabled=false;rg.firstChild.classList.remove('spin');rg.lastChild.textContent='Regenerate';},1100);
+ });
+}
+var tt;function toast(a,b){var t=document.getElementById('toast');document.getElementById('tt').textContent=a;document.getElementById('ts').textContent=b;t.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){t.classList.remove('show')},3200)}
+document.getElementById('list').addEventListener('click',function(e){var b=e.target.closest('.row');if(!b)return;sel=+b.dataset.id;list();panel(true)});
+document.querySelectorAll('.chip').forEach(function(c){c.addEventListener('click',function(){filter=c.dataset.f;document.querySelectorAll('.chip').forEach(function(x){x.setAttribute('aria-pressed',x===c)});list()})});
+var f=document.getElementById('fetch');f.addEventListener('click',function(){f.disabled=true;f.firstChild.classList.add('spin');f.lastChild.textContent='Fetching…';setTimeout(function(){f.disabled=false;f.firstChild.classList.remove('spin');f.lastChild.textContent='Fetch reviews';toast('No new reviews','All 2 locations checked')},1200)});
+var days=[['Thu',4.4],['Fri',4.7],['Sat',4.5],['Sun',4.8],['Mon',4.3],['Tue',4.6],['Wed',4.2]],bh='';
+days.forEach(function(d,i){bh+='<div class="bar'+(i===6?' today':'')+'"><b>'+d[1].toFixed(1)+'</b><i style="height:'+((d[1]-3)/2*80+8)+'px;animation-delay:'+(i*40)+'ms"></i><small>'+d[0]+'</small></div>'});
+document.getElementById('bars').innerHTML=bh;
+list();panel(false);
+})();
+</script>
+</body>
+</html>
