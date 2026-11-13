@@ -1,5 +1,7 @@
 # LocalPulseHub logo kit
 
+**Icon source of truth:** Figma file "LocalPulseHub — Favicon" (https://www.figma.com/design/y8AuflOF5f3zJCnpDHgtfx). `logo-mark.svg` and `logo-mark-small.svg` are exported from it; the PNG sizes and `favicon.ico` are rendered from those SVGs.
+
 All logos are pure vectors (SVG). The arrow has three exact 45° strokes and a right-angle head, drawn on a 32×32 grid with a 2.6 stroke (3.4 in the 16/32px favicons so they stay crisp). The "LOCALPULSEHUB" letters are Anton turned into shapes, so no font is needed.
 
 | File | What it is | Use it for |
