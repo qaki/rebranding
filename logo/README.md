@@ -1,6 +1,6 @@
 # LocalPulseHub logo kit
 
-All logos are pure vectors (SVG). The arrow has three exact 45° strokes and a right-angle head, drawn on a 32×32 grid with a 2.6 stroke (3.0 in the 16/32px favicons so they stay crisp). The "LOCALPULSEHUB" letters are Anton turned into shapes, so no font is needed.
+All logos are pure vectors (SVG). The arrow has three exact 45° strokes and a right-angle head, drawn on a 32×32 grid with a 2.6 stroke (3.4 in the 16/32px favicons so they stay crisp). The "LOCALPULSEHUB" letters are Anton turned into shapes, so no font is needed.
 
 | File | What it is | Use it for |
 |---|---|---|
