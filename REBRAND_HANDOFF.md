@@ -145,6 +145,7 @@ Also update the semantic tokens (`--color-primary`, `--color-ring`, `--color-bor
 
 **Logo**
 - **Use the final files in `../rebranding/logo/`** (see its README): `logo-mark.svg` (app icon), `logo-full-on-navy.svg` / `logo-full-on-white.svg` (full logo, letters already outlined), `favicon.ico`, `icon-*.png`. Copy them into `public/` / `app/` as needed. Don't redraw them.
+- **Size rule:** when the lime square is under ~48px (site header, footer, dashboard sidebar, mobile nav, favicon) use the 3.4-stroke `-small` versions (`logo-mark-small.svg`, `logo-full-on-navy-small.svg`, `logo-full-on-white-small.svg`); above that, the regular 2.6 files. The arrow always fills the square exactly as in the SVG (viewBox 0 0 32 32 drawn at the full square size) — never draw it smaller inside the square.
 - Mark: a rising arrow, three exact 45° strokes + right-angle head. SVG (viewBox 32×32):
   `<path d="M5.5 22.5L12.5 15.5L16.5 19.5L26.5 9.5M19.5 9.5H26.5V16.5" fill="none" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>` (favicon 16/32px: 3.4)
   
