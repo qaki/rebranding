@@ -91,6 +91,8 @@ LocalPulseHub (localpulsehub.com) is a SaaS for small US local businesses: it ge
 - The preview simplified some things (fake forms, fewer nav items, static demo). Never copy those simplifications into the app. Restyle the real thing.
 - If the app has text/element that the preview doesn't show, keep it and style it in the new system. Ask the founder before removing any text.
 
+Read `AGENTS.md` and `HANDOFF.md` (session history, newest entries at the top — read at least the latest entries and anything about design, landing page, dashboard, logo or fonts) before coding. `FRONTEND_MODEL.md` describes the OLD design (emerald, Inter/Space Grotesk, slate): it's superseded by this brief — read it only to understand what exists today, never follow its visual rules. Don't edit `HANDOFF.md`/`FRONTEND_MODEL.md` during the rebrand unless the founder asks; Phase 8 updates the docs.
+
 Read `AGENTS.md` before coding. It's Next.js 16 (App Router, `proxy.ts` not middleware), React 19, Tailwind v4 (`@theme` in `app/globals.css`), Framer Motion, Lucide icons. Read the relevant guide in `node_modules/next/dist/docs/` before using any Next API you're not sure about.
 
 ### B2. Brand decisions (already approved — don't re-debate)
